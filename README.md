@@ -2,15 +2,20 @@
 - [daily progression](#daily-progression)
   - [monday 5th july](#monday-5th-july)
   - [tuesday 6th july](#tuesday-6th-july)
+  - [wednesday 7th july](#wednesday-7th-july)
 
 
 ## todo
+
+- [ ] explore graph tool library of networks
+- [ ] indepth reading/ notes of stochastic block model papers
+  
 
 ## daily progression
 
 ### monday 5th july
 
-familiarization with the project:
+Familiarization with the project:
 - installation of graph-tool library
 - documentation overview 
 - first read of main papers outline in the cookbook 
@@ -19,7 +24,10 @@ familiarization with the project:
 
 - project github repository setup
 
-experimenting with graph-tool:
-- went through the quick start tutorial
+Experimenting with graph-tool:
+- went through the quick start tutorial, learning the base library functionality and terminology
 
+### wednesday 7th july
+
+in preparation of an indepth reading of the Nonparametric statistical inference and stochastic block model, I refreshed my understanding of basic probabilities along with numpy and matplotlib to help with visualisation.
 
