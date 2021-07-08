@@ -1,6 +1,8 @@
 # Network Science 
 # Chapter 9: Community
 
+http://networksciencebook.com/
+
 - [Network Science](#network-science)
 - [Chapter 9: Community](#chapter-9-community)
   - [intro](#intro)
@@ -22,6 +24,9 @@
   - [overlapping communities](#overlapping-communities)
     - [clique percolation](#clique-percolation)
     - [link clustering](#link-clustering)
+  - [testing communities](#testing-communities)
+    - [skipped LFR benchmark and speed sections](#skipped-lfr-benchmark-and-speed-sections)
+  - [Characterizing Communities](#characterizing-communities)
 
 ## intro 
 
@@ -181,3 +186,28 @@ nodes that belong to k-cliques belonging to different communities allow them to 
 however, when studying random networks, in sufficiently dense ones large k-cliques naturally emerge
 
 ### link clustering
+
+by representing relationship, links unlike nodes usually community specific
+
+link clustering first evaluates the similarity between links depending on their relative neighbors 
+
+single linkage is then used to merge together links with highest similarity until forming a single community
+
+
+## testing communities 
+
+different algorithms obtain varied partitions of communities, how to pick ?
+
+the girvan-newman benchmark divides 128 nodes in 4 communities assigning to each node two probability to link, one other from its communities and one with nodes from other communities
+
+algorithms perform better when the former is higher than the latter
+
+### skipped LFR benchmark and speed sections
+
+## Characterizing Communities
+
+the distribution of community size seems to follow a fat tailed distribution 
+
+the weak tie hypothesis stipulates that strong links lie within (smaller communities) with weaker one connecting them
+
+social and transport network associate strong ties differently, in transport/biological network links between communities hold more traffic translating in stronger betweenness 

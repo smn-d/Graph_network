@@ -29,5 +29,9 @@ Experimenting with graph-tool:
 
 ### wednesday 7th july
 
-in preparation of an indepth reading of the Nonparametric statistical inference and stochastic block model, I refreshed my understanding of basic probabilities along with numpy and matplotlib to help with visualisation.
+In preparation of an indepth reading of the Nonparametric statistical inference and stochastic block model, I refreshed my understanding of basic probabilities along with numpy and matplotlib to help with visualisation.
+
+studied the community chapter of network theory up to section 9.5
+
+
 
