@@ -5,6 +5,7 @@
   - [wednesday 7th](#wednesday-7th)
   - [thursday 8th](#thursday-8th)
   - [friday 9th](#friday-9th)
+  - [saturday/sunday/monday 10/11/12](#saturdaysundaymonday-101112)
 
 
 ## todo
@@ -45,7 +46,11 @@ experiments with graph-tool network library and inference model
 
 SBM first step and other ressources reading 
 
+dataset access and ethics form:
+- filled form to required access for data set
+- completed the citi data ethics course
 
+### saturday/sunday/monday 10/11/12
 
-
+Cookbook understanding/experiments 
 
