@@ -1,4 +1,3 @@
-- [todo](#todo)
 - [daily progression](#daily-progression)
   - [monday 5th](#monday-5th)
   - [tuesday 6th](#tuesday-6th)
@@ -7,11 +6,6 @@
   - [friday 9th](#friday-9th)
   - [saturday/sunday/monday 10/11/12](#saturdaysundaymonday-101112)
 
-
-## todo
-
-- [ ] explore graph tool library of networks
-- [ ] indepth reading/ notes of stochastic block model papers
   
 
 ## daily progression
