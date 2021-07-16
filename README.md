@@ -48,3 +48,9 @@ dataset access and ethics form:
 
 Cookbook understanding/experiments 
 
+### tuesday 13
+
+setup jabref for bibliography/ gathering first papers 
+
+prepared environment for dice 
+
