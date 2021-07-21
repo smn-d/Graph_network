@@ -12,7 +12,7 @@ g = gt.collection.data["lesmis"]
 ## the inference
 mdl = np.inf ##
 
-base_type = gt.BlockState
+base_type = gt.LatentMultigraphBlockState
 state_tmp = gt.minimize_nested_blockmodel_dl(g,
                                                              state_args=dict(
                                                                  base_type=base_type))
