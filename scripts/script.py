@@ -81,8 +81,8 @@ def main():
 
         print(f"Mode {i} with size {mode.get_M()/len(bs)}")
         state = state.copy(bs=b)
-        state.draw(vertex_shape="pie", vertex_pie_fractions=pv,
-                output=expName+"-partition-mode-%i.svg" % i)
+        # state.draw(vertex_shape="pie", vertex_pie_fractions=pv,
+        #         output=expName+"-partition-mode-%i.svg" % i)
 
     #Log evidence calculation
     

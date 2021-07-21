@@ -1,13 +1,13 @@
 import graph_tool.all as gt
 from sbm import sbm
 
-experimentName = "patientIcd100"
+experimentName = "patientIcd1000"
 
 model = sbm()
 
 # graph_title = "multi1000PatientDiseases.gt.gz"
-admin_num = 100
-model.make_graph(admin_num=admin_num, age=False,ethnicity=False)
+admin_num = 1000
+model.make_graph(admin_num=admin_num, age=True,ethnicity=True)
 
 model.save_graph(filename=experimentName+".gt.gz")
 

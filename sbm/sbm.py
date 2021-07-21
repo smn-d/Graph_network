@@ -169,13 +169,19 @@ class sbm():
                 clabel = g.vp['kind']
 
                 state_args = {'clabel': clabel, 'pclabel': clabel}
-                if "count" in g.ep:
-                    state_args["eweight"] = g.ep.count
+                
 
+                if(multilayer):
+                    state_args["ec"] = g.ep.weight
+                    state_args["layers"] = True
+                    state = gt.minimize_nested_blockmodel_dl(g,state_args=dict(base_type=gt.gt.LayeredBlockState,**state_args))
 
+                else:
+                # base_type = gt.BlockState
+                    state = gt.minimize_nested_blockmodel_dl(g,state_args=dict(base_type=gt.BlockState,**state_args))
 
-                base_type = gt.BlockState
-                state = gt.minimize_nested_blockmodel_dl(g,state_args=dict(base_type=base_type,**state_args))
+                gt.mcmc_equilibrate(state, wait=100, mcmc_args=dict(niter=10))
+
 
                 print(state)
                 self.state = state
