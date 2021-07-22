@@ -6,7 +6,7 @@ experimentName = "patientIcd"
 model = sbm()
 
 # graph_title = "multi1000PatientDiseases.gt.gz"
-admin_num = 0
+admin_num = 56115
 model.make_graph(admin_num=admin_num, gender=False,ethnicity=False)
 
 model.save_graph(filename=experimentName+".gt.gz")
