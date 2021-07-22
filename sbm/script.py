@@ -1,7 +1,7 @@
 import graph_tool.all as gt
 from sbm import sbm
 
-experimentName = "patientIcd10"
+experimentName = "patientIcd"
 
 model = sbm()
 
