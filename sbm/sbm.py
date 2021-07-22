@@ -74,7 +74,7 @@ class sbm():
         admin_add = defaultdict(lambda: g.add_vertex())
         icd9_add = defaultdict(lambda: g.add_vertex())
 
-        with open('admission_patients_demograhics_morbidities.csv') as csv_file:
+        with open('sbm/admission_patients_demograhics_morbidities.csv') as csv_file:
             csv_reader = csv.DictReader(csv_file, delimiter=',')
             count = 0
             for row in csv_reader:
@@ -89,7 +89,7 @@ class sbm():
                     name[d] = icd9
                     kind[d] = 1
                     e = g.add_edge(p,d)
-                    if(age or ethnicity):
+                    if(gender or ethnicity):
                         g.ep.weight[e]=0
 
                 if(gender):
