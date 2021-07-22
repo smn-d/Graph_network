@@ -18,7 +18,7 @@ class sbm():
         self.mdl = np.nan ## minimum description length of inferred state
         self.L = np.nan ## number of levels in hierarchy
 
-    def make_graph(self,admin_num = 0, age=False, ethnicity=False):
+    def make_graph(self,admin_num = 0, gender=False, ethnicity=False):
         '''
         optional argument:
         - admin_num: only consider the given number of admissions
@@ -34,9 +34,9 @@ class sbm():
         name = g.vp["name"] = g.new_vp("string")
         kind = g.vp["kind"] = g.new_vp("int")
 
-        if(age or ethnicity):
+        if(gender or ethnicity):
             weight = g.ep["weight"] = g.new_ep("int")
-        if(age):
+        if(gender):
             m = g.add_vertex()
             f = g.add_vertex()
             name[m] = "M"
@@ -92,7 +92,7 @@ class sbm():
                     if(age or ethnicity):
                         g.ep.weight[e]=0
 
-                if(age):
+                if(gender):
                     
                     if(row['gender']=="M"):
                         e = g.add_edge(p,m)
