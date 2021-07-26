@@ -4,36 +4,36 @@ from sbm import sbm
 experimentName = "test"
 
 model = sbm()
-admin_num = 56115
-model.make_graph(admin_num=admin_num, age=False,gender=False,ethnicity=False)
+patient_num = 56115
+model.make_graph(patient_num=patient_num, age=False,gender=False,ethnicity=False)
 experimentName = "56115nested_noDegCorr_noDem" 
 model.setOuputLoc(experimentName)
 model.fit(multilayer=False,deg_corr=False)
 
 model = sbm()
-admin_num = 56115
-model.make_graph(admin_num=admin_num, age=False,gender=False,ethnicity=False)
+patient_num = 56115
+model.make_graph(patient_num=patient_num, age=False,gender=False,ethnicity=False)
 experimentName = "56115nested_DegCorr_noDem" 
 model.setOuputLoc(experimentName)
 model.fit(multilayer=False,deg_corr=True)
 
 model = sbm()
-admin_num = 56115
-model.make_graph(admin_num=admin_num, age=True,gender=True,ethnicity=True)
+patient_num = 56115
+model.make_graph(patient_num=patient_num, age=True,gender=True,ethnicity=True)
 experimentName = "56115nested_DegCorr_Dem" 
 model.setOuputLoc(experimentName)
 model.fit(multilayer=False,deg_corr=True)
 
 model = sbm()
-admin_num = 56115
-model.make_graph(admin_num=admin_num, age=True,gender=True,ethnicity=True)
+patient_num = 56115
+model.make_graph(patient_num=patient_num, age=True,gender=True,ethnicity=True)
 experimentName = "56115multi_noDegCorr_Dem" 
 model.setOuputLoc(experimentName)
 model.fit(multilayer=True,deg_corr=False)
 
 model = sbm()
-admin_num = 56115
-model.make_graph(admin_num=admin_num, age=True,gender=True,ethnicity=True)
+patient_num = 56115
+model.make_graph(patient_num=patient_num, age=True,gender=True,ethnicity=True)
 experimentName = "56115mult_DegCorr_Dem" 
 model.setOuputLoc(experimentName)
 model.fit(multilayer=True,deg_corr=True)
