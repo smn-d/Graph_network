@@ -1,23 +1,39 @@
 import graph_tool.all as gt
 from sbm import sbm
 
-experimentName = "patientIcd"
+experimentName = "test"
 
 model = sbm()
-
-# graph_title = "multi1000PatientDiseases.gt.gz"
 admin_num = 56115
-# model.make_graph(admin_num=admin_num, gender=False,ethnicity=False)
+model.make_graph(admin_num=admin_num, age=False,gender=False,ethnicity=False)
+experimentName = "56115nested_noDegCorr_noDem" 
+model.setOuputLoc(experimentName)
+model.fit(multilayer=False,deg_corr=False)
 
+model = sbm()
+admin_num = 56115
+model.make_graph(admin_num=admin_num, age=False,gender=False,ethnicity=False)
+experimentName = "56115nested_DegCorr_noDem" 
+model.setOuputLoc(experimentName)
+model.fit(multilayer=False,deg_corr=True)
 
-# model.save_graph(filename=experimentName+".gt.gz")
+model = sbm()
+admin_num = 56115
+model.make_graph(admin_num=admin_num, age=True,gender=True,ethnicity=True)
+experimentName = "56115nested_DegCorr_Dem" 
+model.setOuputLoc(experimentName)
+model.fit(multilayer=False,deg_corr=True)
 
-model.load_graph(filename=experimentName+".gt.gz")
+model = sbm()
+admin_num = 56115
+model.make_graph(admin_num=admin_num, age=True,gender=True,ethnicity=True)
+experimentName = "56115multi_noDegCorr_Dem" 
+model.setOuputLoc(experimentName)
+model.fit(multilayer=True,deg_corr=False)
 
-model.fit(multilayer=False)
-print(model.mdl)
-model.state.print_summary()
-
-# gt.draw_hierarchy(model.state, subsample_edges=1000, layout = "bipartite",output=experimentName+"Hierarchy.pdf")
-# gt.draw_hierarchy(model.state, subsample_edges=1000,output=experimentName+"Hierarchy.pdf")
-
+model = sbm()
+admin_num = 56115
+model.make_graph(admin_num=admin_num, age=True,gender=True,ethnicity=True)
+experimentName = "56115mult_DegCorr_Dem" 
+model.setOuputLoc(experimentName)
+model.fit(multilayer=True,deg_corr=True)
