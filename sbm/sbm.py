@@ -244,6 +244,9 @@ class sbm():
                     state = gt.minimize_nested_blockmodel_dl(g,state_args=dict(base_type=gt.BlockState,**state_args))
                     # state = gt.minimize_nested_blockmodel_dl(g,state_args=dict(base_type=gt.BlockState))
 
+
+                print("model minimized")
+
                 L = 0
                 for s in state.levels:
                     L += 1
@@ -282,6 +285,7 @@ class sbm():
 
 
                 hist = gt.mcmc_equilibrate(state, wait=100,mcmc_args=dict(niter=10),history=True)
+                print("equilibration done")
 
 
 
