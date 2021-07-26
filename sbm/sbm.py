@@ -103,7 +103,7 @@ class sbm():
         subject_add = defaultdict(lambda: g.add_vertex())
         icd9_add = defaultdict(lambda: g.add_vertex())
 
-        with open('admission_patients_demograhics_morbidities.csv') as csv_file:
+        with open('sbm/admission_patients_demograhics_morbidities.csv') as csv_file:
             csv_reader = csv.DictReader(csv_file, delimiter=',')
             count = 0
             for row in csv_reader:
@@ -278,7 +278,7 @@ class sbm():
 
                 state = state.copy(state_args=dict(clabel=None,pclabel=None))
 
-                hist = gt.mcmc_equilibrate(state, wait=1000,mcmc_args=dict(niter=10),history=True)
+                hist = gt.mcmc_equilibrate(state, wait=100,mcmc_args=dict(niter=10),history=True)
 
 
 
@@ -306,9 +306,9 @@ class sbm():
                 self.modelSelection()
                 self.plotGroupNum()
 
-                b = self.state.get_bs()[0]
-
-                np.savetxt('level0Groups.csv',b)
+                np.savetxt('level0Groups.csv',self.state.get_bs()[0])
+                np.savetxt('level0Groups.csv',self.state.get_bs()[1])
+                np.savetxt('level0Groups.csv',self.state.get_bs()[2])
 
 
                 nKind = {}
@@ -389,7 +389,7 @@ class sbm():
             dls.append(s.entropy())
 
         # Now we collect the marginals for exactly 1,000 sweeps
-        gt.mcmc_equilibrate(self.state, force_niter=1000, mcmc_args=dict(niter=10),
+        gt.mcmc_equilibrate(self.state, force_niter=100, mcmc_args=dict(niter=10),
                             callback=collect_partitions)
 
         # Disambiguate partitions and obtain marginals
@@ -437,7 +437,7 @@ class sbm():
                 h[l][B] += 1
 
         # Now we collect the marginal distribution for exactly 1,000 sweeps
-        gt.mcmc_equilibrate(self.state, force_niter=1000, mcmc_args=dict(niter=10),
+        gt.mcmc_equilibrate(self.state, force_niter=100, mcmc_args=dict(niter=10),
                             callback=collect_num_groups)
         
         if not os.path.exists(self.output+"/groupNumber"):
