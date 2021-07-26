@@ -275,8 +275,11 @@ class sbm():
 
 
 
+                if(multilayer):
+                    state = state.copy(state_args=dict(clabel=None,pclabel=None,ec=g.ep.weight,layers=True))
+                else:
+                    state = state.copy(state_args=dict(clabel=None,pclabel=None))
 
-                state = state.copy(state_args=dict(clabel=None,pclabel=None))
 
                 hist = gt.mcmc_equilibrate(state, wait=100,mcmc_args=dict(niter=10),history=True)
 
