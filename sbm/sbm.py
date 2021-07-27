@@ -314,7 +314,9 @@ class sbm():
                 # self.plotGroupNum()
 
                 for l in range(0,L):
-                    np.savetxt(self.setOuputLoc+"Groups/level"+l+".csv",self.state.get_bs()[l])
+                    if not os.path.exists(self.output+"groups"):
+                        os.makedirs(self.output+"groups")
+                    np.savetxt(self.output+"groups/level"+str(l)+".csv",self.state.get_bs()[l])
 
 
                 # nKind = {}
