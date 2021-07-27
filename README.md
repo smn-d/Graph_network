@@ -54,3 +54,6 @@ setup jabref for bibliography/ gathering first papers
 
 prepared environment for dice 
 
+### 14/15/16
+
+producing script, experimentation and tests, dealing with use on dice
