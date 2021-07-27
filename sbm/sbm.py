@@ -103,7 +103,7 @@ class sbm():
         subject_add = defaultdict(lambda: g.add_vertex())
         icd9_add = defaultdict(lambda: g.add_vertex())
 
-        with open('sbm/admission_patients_demograhics_morbidities.csv') as csv_file:
+        with open('admission_patients_demograhics_morbidities.csv') as csv_file:
             csv_reader = csv.DictReader(csv_file, delimiter=',')
             count = 0
             for row in csv_reader:
