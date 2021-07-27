@@ -304,18 +304,17 @@ class sbm():
                 # gt.draw_hierarchy(self.state, subsample_edges=1000,output=self.output+"Hierarchy.pdf")
                 
 
-                if(multilayer):
-                    self.state.draw(edge_color=g.ep.weight, edge_gradient=[],
-                            ecmap=(plt.cm.coolwarm_r, .6), edge_pen_width=5,
-                            output=self.output+"edge-layer.pdf")
+                # if(multilayer):
+                #     self.state.draw(edge_color=g.ep.weight, edge_gradient=[],
+                #             ecmap=(plt.cm.coolwarm_r, .6), edge_pen_width=5,
+                #             output=self.output+"edge-layer.pdf")
                 # self.plotEntropyEvolution(hist)
                 self.plotEdgeMatrix()
                 # self.modelSelection()
                 # self.plotGroupNum()
 
-                np.savetxt('level0Groups.csv',self.state.get_bs()[0])
-                np.savetxt('level0Groups.csv',self.state.get_bs()[1])
-                np.savetxt('level0Groups.csv',self.state.get_bs()[2])
+                for l in range(0,L):
+                    np.savetxt(self.setOuputLoc+"Groups/level"+l+".csv",self.state.get_bs()[l])
 
 
                 # nKind = {}
