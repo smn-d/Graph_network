@@ -278,14 +278,14 @@ class sbm():
 
 
 
-                if(multilayer):
-                    state = state.copy(state_args=dict(clabel=None,pclabel=None,ec=g.ep.weight,layers=True))
-                else:
-                    state = state.copy(state_args=dict(clabel=None,pclabel=None))
+                # if(multilayer):
+                #     state = state.copy(state_args=dict(clabel=None,pclabel=None,ec=g.ep.weight,layers=True))
+                # else:
+                #     state = state.copy(state_args=dict(clabel=None,pclabel=None))
 
 
-                hist = gt.mcmc_equilibrate(state, wait=100,mcmc_args=dict(niter=10),history=True)
-                print("equilibration done")
+                # hist = gt.mcmc_equilibrate(state, wait=100,mcmc_args=dict(niter=10),history=True)
+                # print("equilibration done")
 
 
 
@@ -301,38 +301,39 @@ class sbm():
                 self.mdl = state.entropy()
 
 
-                gt.draw_hierarchy(self.state, subsample_edges=1000,output=self.output+"Hierarchy.pdf")
+                # gt.draw_hierarchy(self.state, subsample_edges=1000,output=self.output+"Hierarchy.pdf")
                 
 
                 if(multilayer):
                     self.state.draw(edge_color=g.ep.weight, edge_gradient=[],
                             ecmap=(plt.cm.coolwarm_r, .6), edge_pen_width=5,
                             output=self.output+"edge-layer.pdf")
-                self.plotEntropyEvolution(hist)
+                # self.plotEntropyEvolution(hist)
                 self.plotEdgeMatrix()
-                self.modelSelection()
-                self.plotGroupNum()
+                # self.modelSelection()
+                # self.plotGroupNum()
 
                 np.savetxt('level0Groups.csv',self.state.get_bs()[0])
                 np.savetxt('level0Groups.csv',self.state.get_bs()[1])
                 np.savetxt('level0Groups.csv',self.state.get_bs()[2])
 
 
-                nKind = {}
-                for bNum in np.unique(b):
-                    nKind[bNum]=set()
+                # nKind = {}
+                # for bNum in np.unique(b):
+                #     nKind[bNum]=set()
 
-                for v,group in enumerate(b):
-                    nKind[group].add(self.g.vp.kind[v])
-
-
+                # for v,group in enumerate(b):
+                #     nKind[group].add(self.g.vp.kind[v])
 
 
-                with open(self.output+"info.txt", "a") as f:
+
+
+                # with open(self.output+"info.txt", "a") as f:
             
-                    print("final model entropy: ",self.mdl, file=f)
-                    print(self.state, file=f)
-                    print(nKind,file=f)
+                #     print("final model entropy: ",self.mdl, file=f)
+                #     print(nKind,file=f)
+
+                #     print(self.state, file=f)
                 
                     # print(self.state.get_bs()[0].tolist(),file=f)
 
