@@ -210,6 +210,8 @@ class sbm():
             Fit the sbm to the patient-icd9-demographic network.
             '''
 
+            print("fit start")
+
 
             g = self.g
             if g is None:
