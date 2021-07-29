@@ -22,6 +22,8 @@ experimentName = "test"
 
 folder = "data/"
 
+""""
+
 model = sbm()
 # patient_num = 115
 patient_num = 56115
@@ -64,6 +66,9 @@ model.save_graph()
 
 model.fit(multilayer=False,deg_corr=True)
 print("experiment "+ experimentName+ " done")
+
+
+"""
 
 model = sbm()
 # patient_num = 115
