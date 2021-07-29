@@ -270,10 +270,8 @@ class sbm():
                     np.savetxt(self.output+"groupsPreSwap/level"+str(l)+".csv",state.get_bs()[l])
 
                 self.state = state
+                self.mdl = state.entropy()
 
-                gt.draw_hierarchy(state, subsample_edges=1000,output=self.output+"noSwapHierarchy.pdf")
-
-                
 
                 with open(self.output+"info.txt", "a") as f:
 
@@ -283,12 +281,21 @@ class sbm():
                     print(state, file=f)
 
 
+                gt.draw_hierarchy(state, subsample_edges=1000,output=self.output+"noSwapHierarchy.pdf")
+
+                
+
+
 
 
                 # if(multilayer):
                 #     state = state.copy(state_args=dict(clabel=None,pclabel=None,ec=g.ep.weight,layers=True))
                 # else:
                 #     state = state.copy(state_args=dict(clabel=None,pclabel=None))
+
+
+
+                """
 
 
                 hist = gt.mcmc_equilibrate(state, wait=10,mcmc_args=dict(niter=10),history=True)
@@ -339,6 +346,8 @@ class sbm():
                     print(self.state, file=f)
                 
                     print(self.state.get_bs()[0].tolist(),file=f)
+
+                """
 
 
       
