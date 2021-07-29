@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.ticker as mticker
 import os
 import scipy.special as sc
+import scipy
 
 
 
@@ -23,6 +24,7 @@ class sbm():
         self.groups = {} ## results of group membership from inference
         self.mdl = np.nan ## minimum description length of inferred state
         self.L = np.nan ## number of levels in hierarchy
+        self.demographics = []
 
     def setOuputLoc(self,experimentName="exp"):
         if not os.path.exists(experimentName):
@@ -45,9 +47,13 @@ class sbm():
         name = g.vp["name"] = g.new_vp("string")
         kind = g.vp["kind"] = g.new_vp("int")
 
+
         if(gender or ethnicity or age):
             weight = g.ep["weight"] = g.new_ep("int")
         if(gender):
+
+            self.demographics.append("gender")
+
             m = g.add_vertex()
             f = g.add_vertex()
             name[m] = "M"
@@ -55,6 +61,9 @@ class sbm():
             name[f] = "F"
             kind[f] = 2
         if(ethnicity):
+
+            self.demographics.append("ethnicity")
+
             # ethnicities = ['hispanic', 'white', 'black', 'asian', 'native', 'unknown', 'other']
             h = g.add_vertex()
             name[h] = "hispanic"
@@ -79,6 +88,10 @@ class sbm():
             kind[o] = 3
 
         if(age):
+
+
+            self.demographics.append("age")
+
             a1 = g.add_vertex()
             name[a1] = "0-19"
             kind[a1] = 4
@@ -111,7 +124,8 @@ class sbm():
                 # p = admin_add[row['hadm_id']]
                 p = subject_add[row['subject_id']]
                 
-                name[p] = row['hadm_id']
+                name[p] = "p"+row['hadm_id']
+                # name[p] = row['hadm_id']
                 kind[p] = 0
 
                 icdList = row['icd9_4_digits'].split(',')
@@ -249,12 +263,15 @@ class sbm():
 
                 print("model minimized")
 
+                minNumBlock = 2 + len(self.demographics)
+                
                 L = 0
                 for s in state.levels:
                     L += 1
-                    if s.get_nonempty_B() == 2:
+                    if s.get_nonempty_B() == minNumBlock:
                         break
                 state = state.copy(bs=state.get_bs()[:L] + [np.zeros(1)])
+
 
                 b = state.get_bs()[0]
 
@@ -271,8 +288,7 @@ class sbm():
                         os.makedirs(self.output+"groupsPreSwap")
                     np.savetxt(self.output+"groupsPreSwap/level"+str(l)+".csv",state.get_bs()[l])
 
-                self.state = state
-                self.mdl = state.entropy()
+ 
 
 
                 with open(self.output+"info.txt", "a") as f:
@@ -286,23 +302,34 @@ class sbm():
                 gt.draw_hierarchy(state, subsample_edges=1000,output=self.output+"noSwapHierarchy.pdf")
 
                 
+                
+                if(multilayer):
+                    state = state.copy(state_args=dict(clabel=None,pclabel=None,ec=g.ep.weight,layers=True))
+                else:
+                    state = state.copy(state_args=dict(clabel=None,pclabel=None))
 
 
 
 
-                # if(multilayer):
-                #     state = state.copy(state_args=dict(clabel=None,pclabel=None,ec=g.ep.weight,layers=True))
-                # else:
-                #     state = state.copy(state_args=dict(clabel=None,pclabel=None))
+                self.state = state
+                self.mdl = state.entropy()
 
 
 
-                """
 
-
-                hist = gt.mcmc_equilibrate(state, wait=10,mcmc_args=dict(niter=10),history=True)
+                hist = gt.mcmc_equilibrate(state, wait=1000,mcmc_args=dict(niter=10),history=True)
                 print("equilibration done")
 
+                minNumBlock = 2 + len(self.demographics)
+                
+                L = 0
+                for s in state.levels:
+                    L += 1
+                    if s.get_nonempty_B() == minNumBlock or s.get_nonempty_B()==2:
+                        break
+                state = state.copy(bs=state.get_bs()[:L] + [np.zeros(1)])
+
+                print(L,state)
 
                 self.state = state
 
@@ -310,7 +337,11 @@ class sbm():
                 self.mdl = state.entropy()
 
 
-                gt.draw_hierarchy(self.state, subsample_edges=100,output=self.output+"Hierarchy.svg")
+                gt.draw_hierarchy(self.state, subsample_edges=1000,output=self.output+"Hierarchy.svg")
+                gt.draw_hierarchy(self.state, subsample_edges=1000,vertex_text=self.g.vp['name'],vertex_font_size= 5,bg_color='w',hvertex_size=5,hedge_pen_width=1,output=self.output+"labelledHierarchy.pdf")
+
+                if(multilayer==False):
+                    gt.draw_hierarchy(self.state, subsample_edges=1000,layout="bipartite",vertex_text=self.g.vp['name'],vertex_font_size= 5,bg_color='w',text_position="centered",hvertex_size=5,hedge_pen_width=1, output=self.output+"labelledBipartiteHierarchy.pdf")
                 
 
                 # if(multilayer):
@@ -321,14 +352,19 @@ class sbm():
 
                 self.plotEntropyEvolution(hist)
                 self.plotEdgeMatrix()
-                self.modelSelection()
-                # self.plotGroupNum()
+                # self.modelSelection()
+                # self.modes()
+                self.modelSelectionORIGIAL()
+
+                self.plotGroupNum()
 
                 for l in range(0,L):
                     if not os.path.exists(self.output+"groups"):
                         os.makedirs(self.output+"groups")
                     np.savetxt(self.output+"groups/level"+str(l)+".csv",self.state.get_bs()[l])
 
+
+                b = state.get_bs()[0]
 
                 nKind = {}
                 for bNum in np.unique(b):
@@ -349,7 +385,6 @@ class sbm():
                 
                     print(self.state.get_bs()[0].tolist(),file=f)
 
-                """
 
 
 
@@ -361,17 +396,24 @@ class sbm():
                 
 
     def plotEdgeMatrix(self):
-        state = self.state.get_levels()[0]
-        b = gt.contiguous_map(state.get_blocks())
-        state = state.copy(b=b)
 
-        e = state.get_matrix()
+        for l, level in enumerate(self.state.get_levels()):
+            b = gt.contiguous_map(level.get_blocks())
+            level = level.copy(b=b)
 
-        B = state.get_nonempty_B()
-        plt.matshow(e.todense()[:B, :B])
-        plt.savefig(self.output+"matrix-edge-counts.pdf")
+            e = level.get_matrix()
 
-        plt.show()
+            B = level.get_nonempty_B()
+            df = pd.DataFrame(data=scipy.sparse.csc_matrix.todense(e))
+
+            if not os.path.exists(self.output+"/edgeCount"):
+                os.makedirs(self.output+"/edgeCount")
+
+            df.to_csv(self.output+'edgeCount/dataLevel'+str(l)+'.csv', index=False)
+            plt.matshow(e.todense()[:B, :B])
+            plt.savefig(self.output+"edgeCount/matrix-edge-countsLevel"+str(l)+".pdf")
+
+            plt.show()
 
 
 
@@ -416,27 +458,38 @@ class sbm():
             dls.append(s.entropy())
 
         # Now we collect the marginals for exactly 1,000 sweeps
-        gt.mcmc_equilibrate(self.state, force_niter=10, mcmc_args=dict(niter=10),
+        gt.mcmc_equilibrate(self.state, force_niter=1000, mcmc_args=dict(niter=10),
                             callback=collect_partitions)
-
-        # Disambiguate partitions and obtain marginals
-        pmode = gt.PartitionModeState(bs, nested=True, converge=True)
-        pv = pmode.get_marginal(self.g)
-
-        # Get consensus estimate
-        bs = pmode.get_max_nested()
-
-        state = self.state.copy(bs=bs)
-
-        # We can visualize the marginals as pie charts on the nodes:
-        # state.draw(vertex_shape="pie", vertex_pie_fractions=pv,
-        #            output="lesmis-nested-sbm-marginals.svg")
-        # state.draw(vertex_shape="pie", vertex_pie_fractions=pv,output=self.output+"marginals.svg")
 
 
 
         # Infer partition modes
-        pmode = gt.ModeClusterState(bs)
+        pmode = gt.ModeClusterState(bs, nested=True)
+
+        # Minimize the mode state itself
+        gt.mcmc_equilibrate(pmode, wait=1, mcmc_args=dict(niter=1, beta=np.inf))
+
+        # Get inferred modes
+        modes = pmode.get_modes()
+
+        for i, mode in enumerate(modes):
+            b = mode.get_max_nested()    # mode's maximum
+            pv = mode.get_marginal(self.g)    # mode's marginal distribution
+
+            if not os.path.exists(self.output+"/modes"):
+                    os.makedirs(self.output+"/modes")
+
+            with open(self.output+"info.txt", "a") as f:
+                print(f"Mode {i} with size {mode.get_M()/len(bs)}",file=f)
+
+
+        state = self.state.copy(bs=b)
+        gt.draw_hierarchy(state,vertex_shape="pie", vertex_pie_fractions=pv,subsample_edges=1000)
+
+
+
+        # Infer partition modes
+        pmode = gt.ModeClusterState(bs,nested=True)
 
         # Minimize the mode state itself
         gt.mcmc_equilibrate(pmode, wait=1, mcmc_args=dict(niter=1, beta=np.inf))
@@ -454,6 +507,97 @@ class sbm():
         with open(self.output+"info.txt", "a") as f:
             print(f"Model log-evidence = {L}",file=f)
 
+    def modes(self):
+        # Infer partition modes
+
+        bs = []
+
+        def collect_partitions(s):
+            bs.append(s.get_bs())
+
+        # We will collect only partitions 1000 partitions. For more accurate
+        # results, this number should be increased.
+        gt.mcmc_equilibrate(self.state, force_niter=10, mcmc_args=dict(niter=10),
+                    callback=collect_partitions)
+
+        pmode = gt.ModeClusterState(bs)
+
+
+
+        modes = pmode.get_modes()
+
+        for i, mode in enumerate(modes):
+            b = mode.get_max_nested()    # mode's maximum
+            pv = mode.get_marginal(self.g)    # mode's marginal distribution
+
+            if not os.path.exists(self.output+"/modes"):
+                    os.makedirs(self.output+"/modes")
+
+            with open(self.output+"info.txt", "a") as f:
+                print(f"Mode {i} with size {mode.get_M()/len(bs)}",file=f)
+                state = self.state.copy(bs=b)
+                state.draw(vertex_shape="pie", vertex_pie_fractions=pv,
+            output=self.output+"/modes/partition-mode-%i.svg" % i)
+
+    def modelSelectionORIGIAL(self):
+            # collect nested partitions
+            bs = []
+            dls = [] 
+
+            def collect_partitions(s):
+                bs.append(s.get_bs())
+                dls.append(s.entropy())
+
+            # Now we collect the marginals for exactly 1,000 sweeps
+            gt.mcmc_equilibrate(self.state, force_niter=1000, mcmc_args=dict(niter=10),
+                                callback=collect_partitions)
+
+            # Disambiguate partitions and obtain marginals
+            pmode = gt.PartitionModeState(bs, nested=True, converge=True)
+            pv = pmode.get_marginal(self.g)
+
+            # Get consensus estimate
+            bs = pmode.get_max_nested()
+
+            state = self.state.copy(bs=bs)
+
+            # We can visualize the marginals as pie charts on the nodes:
+            # state.draw(vertex_shape="pie", vertex_pie_fractions=pv,
+            #            output="lesmis-nested-sbm-marginals.svg")
+            # state.draw(vertex_shape="pie", vertex_pie_fractions=pv,output=self.output+"marginals.svg")
+
+
+
+
+
+
+
+
+
+
+
+
+            # Infer partition modes
+            pmode = gt.ModeClusterState(bs)
+
+
+
+            # Minimize the mode state itself
+            gt.mcmc_equilibrate(pmode, wait=1, mcmc_args=dict(niter=1, beta=np.inf))
+
+            # Posterior entropy
+            H = pmode.posterior_entropy()
+
+            # log(B!) term
+
+            logB = np.mean(sc.gammaln(np.array([len(np.unique(b)) for b in bs]) + 1))
+
+            # Evidence
+            L = -np.mean(dls) + logB + H
+
+            with open(self.output+"info.txt", "a") as f:
+                print(f"Model log-evidence = {L}",file=f)
+
         
     def plotGroupNum(self):
         h = [np.zeros(self.g.num_vertices() + 1) for s in self.state.get_levels()]
@@ -464,7 +608,7 @@ class sbm():
                 h[l][B] += 1
 
         # Now we collect the marginal distribution for exactly 1,000 sweeps
-        gt.mcmc_equilibrate(self.state, force_niter=10, mcmc_args=dict(niter=10),
+        gt.mcmc_equilibrate(self.state, force_niter=1000, mcmc_args=dict(niter=10),
                             callback=collect_num_groups)
         
         if not os.path.exists(self.output+"/groupNumber"):
