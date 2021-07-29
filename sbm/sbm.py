@@ -263,10 +263,16 @@ class sbm():
                 for v,group in enumerate(b):
                     nKind[group].add(self.g.vp.kind[v])
 
+                for l in range(0,L):
+                    if not os.path.exists(self.output+"groups"):
+                        os.makedirs(self.output+"groups")
+                    np.savetxt(self.output+"groupsPreSwap/level"+str(l)+".csv",self.state.get_bs()[l])
+
                 self.state = state
 
                 gt.draw_hierarchy(state, subsample_edges=1000,output=self.output+"noSwapHierarchy.pdf")
-                self.plotEdgeMatrix()
+
+                
 
                 with open(self.output+"info.txt", "a") as f:
 
@@ -284,8 +290,8 @@ class sbm():
                 #     state = state.copy(state_args=dict(clabel=None,pclabel=None))
 
 
-                # hist = gt.mcmc_equilibrate(state, wait=100,mcmc_args=dict(niter=10),history=True)
-                # print("equilibration done")
+                hist = gt.mcmc_equilibrate(state, wait=10,mcmc_args=dict(niter=10),history=True)
+                print("equilibration done")
 
 
                 self.state = state
@@ -294,7 +300,7 @@ class sbm():
                 self.mdl = state.entropy()
 
 
-                # gt.draw_hierarchy(self.state, subsample_edges=100,output=self.output+"Hierarchy.svg")
+                gt.draw_hierarchy(self.state, subsample_edges=100,output=self.output+"Hierarchy.svg")
                 
 
                 # if(multilayer):
@@ -303,9 +309,9 @@ class sbm():
                 #             output=self.output+"edge-layer.pdf")
 
 
-                # self.plotEntropyEvolution(hist)
-                # self.plotEdgeMatrix()
-                # self.modelSelection()
+                self.plotEntropyEvolution(hist)
+                self.plotEdgeMatrix()
+                self.modelSelection()
                 # self.plotGroupNum()
 
                 for l in range(0,L):
@@ -314,24 +320,24 @@ class sbm():
                     np.savetxt(self.output+"groups/level"+str(l)+".csv",self.state.get_bs()[l])
 
 
-                # nKind = {}
-                # for bNum in np.unique(b):
-                #     nKind[bNum]=set()
+                nKind = {}
+                for bNum in np.unique(b):
+                    nKind[bNum]=set()
 
-                # for v,group in enumerate(b):
-                #     nKind[group].add(self.g.vp.kind[v])
-
-
+                for v,group in enumerate(b):
+                    nKind[group].add(self.g.vp.kind[v])
 
 
-                # with open(self.output+"info.txt", "a") as f:
+
+
+                with open(self.output+"info.txt", "a") as f:
             
-                #     print("final model entropy: ",self.mdl, file=f)
-                #     print(nKind,file=f)
+                    print("final model entropy: ",self.mdl, file=f)
+                    print(nKind,file=f)
 
-                #     print(self.state, file=f)
+                    print(self.state, file=f)
                 
-                #     print(self.state.get_bs()[0].tolist(),file=f)
+                    print(self.state.get_bs()[0].tolist(),file=f)
 
 
       
@@ -361,6 +367,7 @@ class sbm():
         nmoves = [tup[1] for tup in hist]
         entropy = [tup[2] for tup in hist]
 
+        plt.figure()
         m1_t = pd.DataFrame({
         'entropy' : entropy,
         'attemps' : nattempts,
@@ -393,7 +400,7 @@ class sbm():
             dls.append(s.entropy())
 
         # Now we collect the marginals for exactly 1,000 sweeps
-        gt.mcmc_equilibrate(self.state, force_niter=100, mcmc_args=dict(niter=10),
+        gt.mcmc_equilibrate(self.state, force_niter=10, mcmc_args=dict(niter=10),
                             callback=collect_partitions)
 
         # Disambiguate partitions and obtain marginals
@@ -441,7 +448,7 @@ class sbm():
                 h[l][B] += 1
 
         # Now we collect the marginal distribution for exactly 1,000 sweeps
-        gt.mcmc_equilibrate(self.state, force_niter=100, mcmc_args=dict(niter=10),
+        gt.mcmc_equilibrate(self.state, force_niter=10, mcmc_args=dict(niter=10),
                             callback=collect_num_groups)
         
         if not os.path.exists(self.output+"/groupNumber"):
@@ -452,6 +459,7 @@ class sbm():
             ind = np.nonzero(mat)[0]
             marginals = mat[ind[0]:ind[len(ind)-1]+1]
             
+            plt.figure()
             plt.xticks(range(ind[0],ind[len(ind)-1]+1))
             plt.bar(ind, marginals, align='center', alpha=0.5)
 
