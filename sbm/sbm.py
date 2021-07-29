@@ -263,13 +263,14 @@ class sbm():
                 for v,group in enumerate(b):
                     nKind[group].add(self.g.vp.kind[v])
 
+                self.state = state
+
 
                 for l in range(0,L):
                     if not os.path.exists(self.output+"groupsPreSwap"):
                         os.makedirs(self.output+"groupsPreSwap")
-                    np.savetxt(self.output+"groupsPreSwap/level"+str(l)+".csv",state.get_bs()[l])
+                    np.savetxt(self.output+"groupsPreSwap/level"+str(l)+".csv",self.state.get_bs()[l])
 
-                self.state = state
 
                 gt.draw_hierarchy(state, subsample_edges=1000,output=self.output+"noSwapHierarchy.pdf")
 
