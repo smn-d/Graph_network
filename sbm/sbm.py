@@ -278,21 +278,14 @@ class sbm():
 
 
 
-                if(multilayer):
-                    state = state.copy(state_args=dict(clabel=None,pclabel=None,ec=g.ep.weight,layers=True))
-                else:
-                    state = state.copy(state_args=dict(clabel=None,pclabel=None))
+                # if(multilayer):
+                #     state = state.copy(state_args=dict(clabel=None,pclabel=None,ec=g.ep.weight,layers=True))
+                # else:
+                #     state = state.copy(state_args=dict(clabel=None,pclabel=None))
 
 
-                hist = gt.mcmc_equilibrate(state, wait=100,mcmc_args=dict(niter=10),history=True)
-                print("equilibration done")
-
-
-
-
-
-                
-
+                # hist = gt.mcmc_equilibrate(state, wait=100,mcmc_args=dict(niter=10),history=True)
+                # print("equilibration done")
 
 
                 self.state = state
@@ -301,17 +294,19 @@ class sbm():
                 self.mdl = state.entropy()
 
 
-                gt.draw_hierarchy(self.state, subsample_edges=100,output=self.output+"Hierarchy.svg")
+                # gt.draw_hierarchy(self.state, subsample_edges=100,output=self.output+"Hierarchy.svg")
                 
 
                 # if(multilayer):
                 #     self.state.draw(edge_color=g.ep.weight, edge_gradient=[],
                 #             ecmap=(plt.cm.coolwarm_r, .6), edge_pen_width=5,
                 #             output=self.output+"edge-layer.pdf")
-                self.plotEntropyEvolution(hist)
-                self.plotEdgeMatrix()
-                self.modelSelection()
-                self.plotGroupNum()
+
+
+                # self.plotEntropyEvolution(hist)
+                # self.plotEdgeMatrix()
+                # self.modelSelection()
+                # self.plotGroupNum()
 
                 for l in range(0,L):
                     if not os.path.exists(self.output+"groups"):
@@ -319,24 +314,24 @@ class sbm():
                     np.savetxt(self.output+"groups/level"+str(l)+".csv",self.state.get_bs()[l])
 
 
-                nKind = {}
-                for bNum in np.unique(b):
-                    nKind[bNum]=set()
+                # nKind = {}
+                # for bNum in np.unique(b):
+                #     nKind[bNum]=set()
 
-                for v,group in enumerate(b):
-                    nKind[group].add(self.g.vp.kind[v])
-
-
+                # for v,group in enumerate(b):
+                #     nKind[group].add(self.g.vp.kind[v])
 
 
-                with open(self.output+"info.txt", "a") as f:
+
+
+                # with open(self.output+"info.txt", "a") as f:
             
-                    print("final model entropy: ",self.mdl, file=f)
-                    print(nKind,file=f)
+                #     print("final model entropy: ",self.mdl, file=f)
+                #     print(nKind,file=f)
 
-                    print(self.state, file=f)
+                #     print(self.state, file=f)
                 
-                    print(self.state.get_bs()[0].tolist(),file=f)
+                #     print(self.state.get_bs()[0].tolist(),file=f)
 
 
       
@@ -413,7 +408,7 @@ class sbm():
         # We can visualize the marginals as pie charts on the nodes:
         # state.draw(vertex_shape="pie", vertex_pie_fractions=pv,
         #            output="lesmis-nested-sbm-marginals.svg")
-        state.draw(vertex_shape="pie", vertex_pie_fractions=pv,output=self.output+"marginals.svg")
+        # state.draw(vertex_shape="pie", vertex_pie_fractions=pv,output=self.output+"marginals.svg")
 
 
 

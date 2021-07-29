@@ -6,8 +6,8 @@ experimentName = "test"
 
 model = sbm()
 # patient_num = 115
-# patient_num = 56115
-patient_num = 10000
+patient_num = 56115
+# patient_num = 10000
 model.make_graph(patient_num=patient_num, age=False,gender=False,ethnicity=False)
 experimentName = str(patient_num)+"nested_noDegCorr_noDem" 
 # experimentName += "NoEq"
@@ -17,8 +17,8 @@ print("experiment "+ experimentName+ " done")
 
 model = sbm()
 # patient_num = 115
-# patient_num = 56115
-patient_num = 10000
+patient_num = 56115
+# patient_num = 10000
 model.make_graph(patient_num=patient_num, age=False,gender=False,ethnicity=False)
 experimentName = str(patient_num)+"nested_DegCorr_noDem" 
 # experimentName += "NoEq"
@@ -28,8 +28,8 @@ print("experiment "+ experimentName+ " done")
 
 model = sbm()
 # patient_num = 115
-# patient_num = 56115
-patient_num = 10000
+patient_num = 56115
+# patient_num = 10000
 model.make_graph(patient_num=patient_num, age=True,gender=True,ethnicity=True)
 experimentName = str(patient_num)+"nested_DegCorr_Dem" 
 # experimentName += "NoEq"
@@ -40,8 +40,8 @@ print("experiment "+ experimentName+ " done")
 
 model = sbm()
 # patient_num = 115
-# patient_num = 56115
-patient_num = 10000
+patient_num = 56115
+# patient_num = 10000
 model.make_graph(patient_num=patient_num, age=True,gender=True,ethnicity=True)
 experimentName = str(patient_num)+"multi_noDegCorr_Dem" 
 # experimentName += "NoEq"
@@ -52,8 +52,8 @@ print("experiment "+ experimentName+ " done")
 
 model = sbm()
 # patient_num = 115
-# patient_num = 56115
-patient_num = 10000
+patient_num = 56115
+# patient_num = 10000
 
 model.make_graph(patient_num=patient_num, age=True,gender=True,ethnicity=True)
 experimentName = str(patient_num)+"mult_DegCorr_Dem" 
