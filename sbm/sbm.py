@@ -264,8 +264,8 @@ class sbm():
                     nKind[group].add(self.g.vp.kind[v])
 
                 for l in range(0,L):
-                    if not os.path.exists(self.output+"groups"):
-                        os.makedirs(self.output+"groups")
+                    if not os.path.exists(self.output+"groupsPreSwap"):
+                        os.makedirs(self.output+"groupsPreSwap")
                     np.savetxt(self.output+"groupsPreSwap/level"+str(l)+".csv",self.state.get_bs()[l])
 
                 self.state = state
