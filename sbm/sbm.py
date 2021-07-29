@@ -350,6 +350,10 @@ class sbm():
                 """
 
 
+
+            print("fit complete")
+
+
       
 
                 
