@@ -116,7 +116,7 @@ class sbm():
         subject_add = defaultdict(lambda: g.add_vertex())
         icd9_add = defaultdict(lambda: g.add_vertex())
 
-        with open('sbm/admission_patients_demograhics_morbidities.csv') as csv_file:
+        with open('admission_patients_demograhics_morbidities.csv') as csv_file:
             csv_reader = csv.DictReader(csv_file, delimiter=',')
             count = 0
             for row in csv_reader:
@@ -317,8 +317,8 @@ class sbm():
 
 
 
-                # hist = gt.mcmc_equilibrate(state, wait=1000,mcmc_args=dict(niter=10),history=True)
-                # print("equilibration done")
+                hist = gt.mcmc_equilibrate(state, wait=100,mcmc_args=dict(niter=10),history=True)
+                print("equilibration done")
 
                 minNumBlock = 2 + len(self.demographics)
                 
@@ -350,40 +350,40 @@ class sbm():
                 #             output=self.output+"edge-layer.pdf")
 
 
-                # self.plotEntropyEvolution(hist)
-                # self.plotEdgeMatrix()
-                # # self.modelSelection()
+                self.plotEntropyEvolution(hist)
+                self.plotEdgeMatrix()
+                self.modelSelection()
                 # # self.modes()
                 # self.modelSelectionORIGIAL()
 
-                # self.plotGroupNum()
+                self.plotGroupNum()
 
-                # for l in range(0,L):
-                #     if not os.path.exists(self.output+"groups"):
-                #         os.makedirs(self.output+"groups")
-                #     np.savetxt(self.output+"groups/level"+str(l)+".csv",self.state.get_bs()[l])
-
-
-                # b = state.get_bs()[0]
-
-                # nKind = {}
-                # for bNum in np.unique(b):
-                #     nKind[bNum]=set()
-
-                # for v,group in enumerate(b):
-                #     nKind[group].add(self.g.vp.kind[v])
+                for l in range(0,L):
+                    if not os.path.exists(self.output+"groups"):
+                        os.makedirs(self.output+"groups")
+                    np.savetxt(self.output+"groups/level"+str(l)+".csv",self.state.get_bs()[l])
 
 
+                b = state.get_bs()[0]
+
+                nKind = {}
+                for bNum in np.unique(b):
+                    nKind[bNum]=set()
+
+                for v,group in enumerate(b):
+                    nKind[group].add(self.g.vp.kind[v])
 
 
-                # with open(self.output+"info.txt", "a") as f:
+
+
+                with open(self.output+"info.txt", "a") as f:
             
-                #     print("final model entropy: ",self.mdl, file=f)
-                #     print(nKind,file=f)
+                    print("final model entropy: ",self.mdl, file=f)
+                    print(nKind,file=f)
 
-                #     print(self.state, file=f)
+                    print(self.state, file=f)
                 
-                #     print(self.state.get_bs()[0].tolist(),file=f)
+                    print(self.state.get_bs()[0].tolist(),file=f)
 
 
 
