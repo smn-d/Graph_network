@@ -263,43 +263,43 @@ class sbm():
 
                 print("model minimized")
 
-                minNumBlock = 2 + len(self.demographics)
+                # minNumBlock = 2 + len(self.demographics)
                 
-                L = 0
-                for s in state.levels:
-                    L += 1
-                    if s.get_nonempty_B() == minNumBlock:
-                        break
-                state = state.copy(bs=state.get_bs()[:L] + [np.zeros(1)])
+                # L = 0
+                # for s in state.levels:
+                #     L += 1
+                #     if s.get_nonempty_B() == minNumBlock:
+                #         break
+                # state = state.copy(bs=state.get_bs()[:L] + [np.zeros(1)])
 
 
-                b = state.get_bs()[0]
+                # b = state.get_bs()[0]
 
-                nKind = {}
-                for bNum in np.unique(b):
-                    nKind[bNum]=set()
+                # nKind = {}
+                # for bNum in np.unique(b):
+                #     nKind[bNum]=set()
 
-                for v,group in enumerate(b):
-                    nKind[group].add(self.g.vp.kind[v])
+                # for v,group in enumerate(b):
+                #     nKind[group].add(self.g.vp.kind[v])
 
 
-                for l in range(0,L):
-                    if not os.path.exists(self.output+"groupsPreSwap"):
-                        os.makedirs(self.output+"groupsPreSwap")
-                    np.savetxt(self.output+"groupsPreSwap/level"+str(l)+".csv",state.get_bs()[l])
+                # for l in range(0,L):
+                #     if not os.path.exists(self.output+"groupsPreSwap"):
+                #         os.makedirs(self.output+"groupsPreSwap")
+                #     np.savetxt(self.output+"groupsPreSwap/level"+str(l)+".csv",state.get_bs()[l])
 
  
 
 
-                with open(self.output+"info.txt", "a") as f:
+                # with open(self.output+"info.txt", "a") as f:
 
-                    print("no swap: ", file=f)
-                    print(nKind,file=f)
-                    print("entropy: ",state.entropy(),file=f)
-                    print(state, file=f)
+                #     print("no swap: ", file=f)
+                #     print(nKind,file=f)
+                #     print("entropy: ",state.entropy(),file=f)
+                #     print(state, file=f)
 
 
-                gt.draw_hierarchy(state, subsample_edges=100,output=self.output+"noSwapHierarchy.pdf")
+                # gt.draw_hierarchy(state, subsample_edges=100,output=self.output+"noSwapHierarchy.pdf")
 
                 
                 
@@ -311,14 +311,17 @@ class sbm():
 
 
 
+
+
+
+
+
+                hist = gt.mcmc_equilibrate(state, wait=10,mcmc_args=dict(niter=10),history=True)
+                # # hist = gt.mcmc_equilibrate(state, force_niter=100,mcmc_args=dict(niter=10),history=True)
+                # print("equilibration done")
+
                 self.state = state
                 self.mdl = state.entropy()
-
-
-
-
-                hist = gt.mcmc_equilibrate(state, wait=1000,mcmc_args=dict(niter=10),history=True)
-                print("equilibration done")
 
                 minNumBlock = 2 + len(self.demographics)
                 
@@ -329,9 +332,9 @@ class sbm():
                         break
                 state = state.copy(bs=state.get_bs()[:L] + [np.zeros(1)])
 
-                print(L,state)
+                # print(L,state)
 
-                self.state = state
+                # self.state = state
 
                 ## minimum description length
                 self.mdl = state.entropy()
@@ -340,10 +343,10 @@ class sbm():
                 gt.draw_hierarchy(self.state, subsample_edges=1000,output=self.output+"Hierarchy.svg")
                 gt.draw_hierarchy(self.state, subsample_edges=1000,vertex_text=self.g.vp['name'],vertex_font_size= 5,bg_color='w',hvertex_size=5,hedge_pen_width=1,output=self.output+"labelledHierarchy.pdf")
 
-                if(multilayer==False):
-                    gt.draw_hierarchy(self.state, subsample_edges=1000,layout="bipartite",vertex_text=self.g.vp['name'],vertex_font_size= 5,bg_color='w',hvertex_size=5,hedge_pen_width=1, output=self.output+"labelledBipartiteHierarchy.pdf")
+                # if(multilayer==False):
+                #     gt.draw_hierarchy(self.state, subsample_edges=1000,layout="bipartite",vertex_text=self.g.vp['name'],vertex_font_size= 5,bg_color='w',hvertex_size=5,hedge_pen_width=1, output=self.output+"labelledBipartiteHierarchy.pdf")
                 
-                print("hierarchy drew")
+                # print("hierarchy drew")
 
 
                 # if(multilayer):
@@ -358,7 +361,7 @@ class sbm():
                 self.plotEdgeMatrix()
                 print("plotEdgeMatrix done")
 
-                # self.modelSelection()
+                # # self.modelSelection()
 
                 # self.modes()
                 # print("mode done")
@@ -528,10 +531,10 @@ class sbm():
 
         # We will collect only partitions 1000 partitions. For more accurate
         # results, this number should be increased.
-        gt.mcmc_equilibrate(self.state, force_niter=10, mcmc_args=dict(niter=10),
+        gt.mcmc_equilibrate(self.state, force_niter=1000, mcmc_args=dict(niter=10),
                     callback=collect_partitions)
 
-        pmode = gt.ModeClusterState(bs)
+        pmode = gt.ModeClusterState(bs, nested=True)
 
 
 
@@ -548,7 +551,7 @@ class sbm():
                 print(f"Mode {i} with size {mode.get_M()/len(bs)}",file=f)
                 state = self.state.copy(bs=b)
                 state.draw(vertex_shape="pie", vertex_pie_fractions=pv,
-            output=self.output+"/modes/partition-mode-%i.svg" % i)
+            output=self.output+"/modes/partition-mode-%i.pdf" % i)
 
     def modelSelectionORIGIAL(self):
             # collect nested partitions
@@ -560,7 +563,7 @@ class sbm():
                 dls.append(s.entropy())
 
             # Now we collect the marginals for exactly 1,000 sweeps
-            gt.mcmc_equilibrate(self.state, force_niter=100, mcmc_args=dict(niter=10),
+            gt.mcmc_equilibrate(self.state, force_niter=10, mcmc_args=dict(niter=10),
                                 callback=collect_partitions)
 
             # Disambiguate partitions and obtain marginals
@@ -619,7 +622,7 @@ class sbm():
                 h[l][B] += 1
 
         # Now we collect the marginal distribution for exactly 1,000 sweeps
-        gt.mcmc_equilibrate(self.state, force_niter=100, mcmc_args=dict(niter=10),
+        gt.mcmc_equilibrate(self.state, force_niter=10, mcmc_args=dict(niter=10),
                             callback=collect_num_groups)
         
         if not os.path.exists(self.output+"/groupNumber"):
