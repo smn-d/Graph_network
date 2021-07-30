@@ -116,7 +116,7 @@ class sbm():
         subject_add = defaultdict(lambda: g.add_vertex())
         icd9_add = defaultdict(lambda: g.add_vertex())
 
-        with open('admission_patients_demograhics_morbidities.csv') as csv_file:
+        with open('sbm/admission_patients_demograhics_morbidities.csv') as csv_file:
             csv_reader = csv.DictReader(csv_file, delimiter=',')
             count = 0
             for row in csv_reader:
@@ -317,7 +317,7 @@ class sbm():
 
 
 
-                hist = gt.mcmc_equilibrate(state, wait=100,mcmc_args=dict(niter=10),history=True)
+                hist = gt.mcmc_equilibrate(state, wait=1000,mcmc_args=dict(niter=10),history=True)
                 print("equilibration done")
 
                 minNumBlock = 2 + len(self.demographics)
@@ -341,8 +341,10 @@ class sbm():
                 gt.draw_hierarchy(self.state, subsample_edges=1000,vertex_text=self.g.vp['name'],vertex_font_size= 5,bg_color='w',hvertex_size=5,hedge_pen_width=1,output=self.output+"labelledHierarchy.pdf")
 
                 if(multilayer==False):
-                    gt.draw_hierarchy(self.state, subsample_edges=1000,layout="bipartite",vertex_text=self.g.vp['name'],vertex_font_size= 5,bg_color='w',text_position="centered",hvertex_size=5,hedge_pen_width=1, output=self.output+"labelledBipartiteHierarchy.pdf")
+                    gt.draw_hierarchy(self.state, subsample_edges=1000,layout="bipartite",vertex_text=self.g.vp['name'],vertex_font_size= 5,bg_color='w',hvertex_size=5,hedge_pen_width=1, output=self.output+"labelledBipartiteHierarchy.pdf")
                 
+                print("hierarchy drew")
+
 
                 # if(multilayer):
                 #     self.state.draw(edge_color=g.ep.weight, edge_gradient=[],
@@ -351,12 +353,21 @@ class sbm():
 
 
                 self.plotEntropyEvolution(hist)
+                print("EntropyEvolution done")
+
                 self.plotEdgeMatrix()
-                self.modelSelection()
-                # # self.modes()
-                # self.modelSelectionORIGIAL()
+                print("plotEdgeMatrix done")
+
+                # self.modelSelection()
+
+                # self.modes()
+                # print("mode done")
+                self.modelSelectionORIGIAL()
+                print("modelSelection done")
+
 
                 self.plotGroupNum()
+                print("plotGroupNum done")
 
                 for l in range(0,L):
                     if not os.path.exists(self.output+"groups"):
@@ -448,64 +459,64 @@ class sbm():
         plt.savefig(self.output+'entropyHistory.pdf')
         plt.show()
 
-    def modelSelection(self):
-        # collect nested partitions
-        bs = []
-        dls = [] 
+    # def modelSelection(self):
+    #     # collect nested partitions
+    #     bs = []
+    #     dls = [] 
 
-        def collect_partitions(s):
-            bs.append(s.get_bs())
-            dls.append(s.entropy())
+    #     def collect_partitions(s):
+    #         bs.append(s.get_bs())
+    #         dls.append(s.entropy())
 
-        # Now we collect the marginals for exactly 1,000 sweeps
-        gt.mcmc_equilibrate(self.state, force_niter=100, mcmc_args=dict(niter=10),
-                            callback=collect_partitions)
-
-
-
-        # Infer partition modes
-        pmode = gt.ModeClusterState(bs, nested=True)
-
-        # Minimize the mode state itself
-        gt.mcmc_equilibrate(pmode, wait=1, mcmc_args=dict(niter=1, beta=np.inf))
-
-        # Get inferred modes
-        modes = pmode.get_modes()
-
-        for i, mode in enumerate(modes):
-            b = mode.get_max_nested()    # mode's maximum
-            pv = mode.get_marginal(self.g)    # mode's marginal distribution
-
-            if not os.path.exists(self.output+"/modes"):
-                    os.makedirs(self.output+"/modes")
-
-            with open(self.output+"info.txt", "a") as f:
-                print(f"Mode {i} with size {mode.get_M()/len(bs)}",file=f)
-
-
-        state = self.state.copy(bs=b)
-        gt.draw_hierarchy(state,vertex_shape="pie", vertex_pie_fractions=pv,subsample_edges=1000)
+    #     # Now we collect the marginals for exactly 1,000 sweeps
+    #     gt.mcmc_equilibrate(self.state, force_niter=100, mcmc_args=dict(niter=10),
+    #                         callback=collect_partitions)
 
 
 
-        # Infer partition modes
-        pmode = gt.ModeClusterState(bs,nested=True)
+    #     # Infer partition modes
+    #     pmode = gt.ModeClusterState(bs, nested=True)
 
-        # Minimize the mode state itself
-        gt.mcmc_equilibrate(pmode, wait=1, mcmc_args=dict(niter=1, beta=np.inf))
+    #     # Minimize the mode state itself
+    #     gt.mcmc_equilibrate(pmode, wait=1, mcmc_args=dict(niter=1, beta=np.inf))
 
-        # Posterior entropy
-        H = pmode.posterior_entropy()
+    #     # Get inferred modes
+    #     modes = pmode.get_modes()
 
-        # log(B!) term
+    #     for i, mode in enumerate(modes):
+    #         b = mode.get_max_nested()    # mode's maximum
+    #         pv = mode.get_marginal(self.g)    # mode's marginal distribution
 
-        logB = np.mean(sc.gammaln(np.array([len(np.unique(b)) for b in bs]) + 1))
+    #         if not os.path.exists(self.output+"/modes"):
+    #                 os.makedirs(self.output+"/modes")
 
-        # Evidence
-        L = -np.mean(dls) + logB + H
+    #         with open(self.output+"info.txt", "a") as f:
+    #             print(f"Mode {i} with size {mode.get_M()/len(bs)}",file=f)
 
-        with open(self.output+"info.txt", "a") as f:
-            print(f"Model log-evidence = {L}",file=f)
+
+    #     state = self.state.copy(bs=b)
+    #     gt.draw_hierarchy(state,vertex_shape="pie", vertex_pie_fractions=pv,subsample_edges=1000)
+
+
+
+    #     # Infer partition modes
+    #     pmode = gt.ModeClusterState(bs,nested=True)
+
+    #     # Minimize the mode state itself
+    #     gt.mcmc_equilibrate(pmode, wait=1, mcmc_args=dict(niter=1, beta=np.inf))
+
+    #     # Posterior entropy
+    #     H = pmode.posterior_entropy()
+
+    #     # log(B!) term
+
+    #     logB = np.mean(sc.gammaln(np.array([len(np.unique(b)) for b in bs]) + 1))
+
+    #     # Evidence
+    #     L = -np.mean(dls) + logB + H
+
+    #     with open(self.output+"info.txt", "a") as f:
+    #         print(f"Model log-evidence = {L}",file=f)
 
     def modes(self):
         # Infer partition modes
@@ -608,7 +619,7 @@ class sbm():
                 h[l][B] += 1
 
         # Now we collect the marginal distribution for exactly 1,000 sweeps
-        gt.mcmc_equilibrate(self.state, force_niter=1000, mcmc_args=dict(niter=10),
+        gt.mcmc_equilibrate(self.state, force_niter=100, mcmc_args=dict(niter=10),
                             callback=collect_num_groups)
         
         if not os.path.exists(self.output+"/groupNumber"):
