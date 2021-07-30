@@ -8,8 +8,8 @@ folder = "data/"
 
 # model = sbm()
 # # patient_num = 115
-# patient_num = 56115
-# # patient_num = 10000
+# # patient_num = 56115
+# patient_num = 10000
 # model.make_graph(patient_num=patient_num, age=False,gender=False,ethnicity=False)
 # experimentName = folder + str(patient_num)+"nested_DegCorr_noDem" 
 # # experimentName += "NoEq"
@@ -26,7 +26,7 @@ folder = "data/"
 # model.make_graph(patient_num=patient_num, age=True,gender=True,ethnicity=True)
 
 # experimentName = folder + str(patient_num)+"nested_noDegCorr_Dem" 
-# # experimentName += "NoEq"
+# experimentName += "NoEq"
 
 # model.setOuputLoc(experimentName)
 # model.save_graph()
@@ -41,7 +41,7 @@ folder = "data/"
 # model.make_graph(patient_num=patient_num, age=True,gender=True,ethnicity=True)
 
 # experimentName = folder + str(patient_num)+"nested_DegCorr_Dem" 
-# # experimentName += "NoEq"
+# experimentName += "NoEq"
 
 # model.setOuputLoc(experimentName)
 # model.save_graph()
@@ -58,7 +58,7 @@ folder = "data/"
 # model.make_graph(patient_num=patient_num, age=True,gender=True,ethnicity=True)
 
 # experimentName = folder + str(patient_num)+"multi_noDegCorr_Dem" 
-# # experimentName += "NoEq"
+# experimentName += "NoEq"
 
 # model.setOuputLoc(experimentName)
 # model.save_graph()
@@ -74,7 +74,7 @@ patient_num = 56115
 model.make_graph(patient_num=patient_num, age=True,gender=True,ethnicity=True)
 
 experimentName = folder + str(patient_num)+"mult_DegCorr_Dem" 
-# experimentName += "NoEq"
+experimentName += "100niter"
 
 model.setOuputLoc(experimentName)
 model.save_graph()
