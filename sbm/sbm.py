@@ -318,30 +318,35 @@ class sbm():
 
                 hist = gt.mcmc_equilibrate(state, wait=10,mcmc_args=dict(niter=10),history=True)
                 # # hist = gt.mcmc_equilibrate(state, force_niter=100,mcmc_args=dict(niter=10),history=True)
-                # print("equilibration done")
+                print("equilibration done")
 
-                self.state = state
-                self.mdl = state.entropy()
+
 
                 minNumBlock = 2 + len(self.demographics)
-                
+                print("ok")
                 L = 0
                 for s in state.levels:
                     L += 1
-                    if s.get_nonempty_B() == minNumBlock or s.get_nonempty_B()==2:
+                    if s.get_nonempty_B()==2:
+                        break
+                    if s.get_nonempty_B() == minNumBlock:
                         break
                 state = state.copy(bs=state.get_bs()[:L] + [np.zeros(1)])
+                print("ok")
 
                 # print(L,state)
 
-                # self.state = state
+                self.state = state
+                print("ok")
 
                 ## minimum description length
                 self.mdl = state.entropy()
 
+                print("ok")
 
                 gt.draw_hierarchy(self.state, subsample_edges=1000,output=self.output+"Hierarchy.svg")
                 gt.draw_hierarchy(self.state, subsample_edges=1000,vertex_text=self.g.vp['name'],vertex_font_size= 5,bg_color='w',hvertex_size=5,hedge_pen_width=1,output=self.output+"labelledHierarchy.pdf")
+                print("ok")
 
                 # if(multilayer==False):
                 #     gt.draw_hierarchy(self.state, subsample_edges=1000,layout="bipartite",vertex_text=self.g.vp['name'],vertex_font_size= 5,bg_color='w',hvertex_size=5,hedge_pen_width=1, output=self.output+"labelledBipartiteHierarchy.pdf")
@@ -427,7 +432,7 @@ class sbm():
             plt.matshow(e.todense()[:B, :B])
             plt.savefig(self.output+"edgeCount/matrix-edge-countsLevel"+str(l)+".pdf")
 
-            plt.show()
+            # plt.show()
 
 
 
@@ -460,7 +465,7 @@ class sbm():
         # plt.xlim([-width, len(m1_t['attemps'])-width])
         # ax.set_xticklabels(('G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10'))
         plt.savefig(self.output+'entropyHistory.pdf')
-        plt.show()
+        # plt.show()
 
     # def modelSelection(self):
     #     # collect nested partitions
@@ -642,7 +647,7 @@ class sbm():
 
             
             plt.savefig(self.output+'groupNumber/groupNumlevel'+str(l)+'.pdf')
-            plt.show()
+            # plt.show()
 
 
     # def stuff(self):

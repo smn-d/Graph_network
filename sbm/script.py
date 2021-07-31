@@ -27,7 +27,10 @@ def runModel(outputFolder,patient_num,multi,deg_corr,age,gender,ethnicity):
     model.fit(multi,deg_corr)
     print("experiment "+ experimentName+ " done")
 
-runModel(folder,56115,False,True,True,True,True)
+runModel(folder,56115,True,True,True,True,True)
+runModel(folder,56115,True,False,True,True,True)
+# runModel(folder,56115,False,False,True,True,True)
+# runModel(folder,10,False,True,True,True,True)
 
 
 # model = sbm()
